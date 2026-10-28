@@ -19,3 +19,6 @@ DerivedData/
 .idea/
 *.swp
 *~
+
+# Archives
+*.zip
