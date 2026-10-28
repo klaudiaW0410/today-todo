@@ -1,116 +1,178 @@
 import SwiftUI
 
-// MARK: - Compact Theme Picker View
+// MARK: - Dedicated Appearance & Theme View
 struct ThemePickerView: View {
     let currentTheme: AppTheme
     let accentColor: Color
+    let currentAccentColor: AccentColorChoice
     let onSelectTheme: (AppTheme) -> Void
+    let onSelectAccentColor: (AccentColorChoice) -> Void
     let onClose: () -> Void
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 13) {
             // Header
             HStack(alignment: .center) {
-                HStack(spacing: 5) {
+                HStack(spacing: 6) {
                     Image(systemName: "paintpalette.fill")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(accentColor)
                     
-                    Text("Select Theme")
-                        .font(.system(size: 11, weight: .semibold))
+                    Text("Appearance")
+                        .font(.system(size: 15, weight: .bold))
                         .foregroundColor(currentTheme.textPrimary)
                 }
                 
                 Spacer()
                 
                 Button(action: onClose) {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 8.5, weight: .bold))
-                        .foregroundColor(currentTheme.textSecondary)
-                        .padding(4)
-                        .contentShape(Rectangle())
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(currentTheme.textSecondary.opacity(0.6))
+                        .padding(2)
                 }
                 .buttonStyle(.plain)
-                .help("Close Theme Selector")
+                .help("Back to Tasks")
             }
-            .padding(.bottom, 2)
+            .padding(.top, 2)
             
-            // Theme Options
-            VStack(spacing: 5) {
-                ForEach(AppTheme.allCases) { theme in
-                    let isSelected = (theme == currentTheme)
-                    
-                    Button(action: {
-                        onSelectTheme(theme)
-                    }) {
-                        HStack(spacing: 10) {
-                            // Visual Swatch Preview
-                            themePreviewSwatch(for: theme)
-                            
-                            // Title & Description
-                            VStack(alignment: .leading, spacing: 1) {
-                                HStack(spacing: 4) {
-                                    Text(theme.displayName)
-                                        .font(.system(size: 11.5, weight: isSelected ? .semibold : .medium))
-                                        .foregroundColor(currentTheme.textPrimary)
+            // Section 1: Themes
+            VStack(alignment: .leading, spacing: 6) {
+                Text("THEME")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(currentTheme.textSecondary.opacity(0.85))
+                    .tracking(0.6)
+                
+                VStack(spacing: 5) {
+                    ForEach(AppTheme.allCases) { theme in
+                        let isSelected = (theme == currentTheme)
+                        
+                        Button(action: {
+                            onSelectTheme(theme)
+                        }) {
+                            HStack(spacing: 10) {
+                                themePreviewSwatch(for: theme)
+                                
+                                VStack(alignment: .leading, spacing: 1.5) {
+                                    HStack(spacing: 5) {
+                                        Text(theme.displayName)
+                                            .font(.system(size: 12, weight: isSelected ? .semibold : .medium))
+                                            .foregroundColor(currentTheme.textPrimary)
+                                        
+                                        if isSelected {
+                                            Text("Active")
+                                                .font(.system(size: 8, weight: .semibold))
+                                                .foregroundColor(accentColor)
+                                                .padding(.horizontal, 4.5)
+                                                .padding(.vertical, 1)
+                                                .background(accentColor.opacity(0.14))
+                                                .cornerRadius(3)
+                                        }
+                                    }
+                                    
+                                    Text(theme.subtitle)
+                                        .font(.system(size: 9.5, weight: .regular))
+                                        .foregroundColor(currentTheme.textSecondary)
+                                }
+                                
+                                Spacer()
+                                
+                                ZStack {
+                                    Circle()
+                                        .strokeBorder(isSelected ? accentColor : currentTheme.borderSubtle, lineWidth: 1.2)
+                                        .frame(width: 14, height: 14)
                                     
                                     if isSelected {
-                                        Text("Active")
-                                            .font(.system(size: 8.5, weight: .semibold))
-                                            .foregroundColor(accentColor)
-                                            .padding(.horizontal, 4)
-                                            .padding(.vertical, 1)
-                                            .background(accentColor.opacity(0.12))
-                                            .cornerRadius(3)
+                                        Circle()
+                                            .fill(accentColor)
+                                            .frame(width: 7, height: 7)
                                     }
                                 }
-                                
-                                Text(theme.subtitle)
-                                    .font(.system(size: 9.5, weight: .regular))
-                                    .foregroundColor(currentTheme.textSecondary)
+                                .frame(width: 16, height: 16)
                             }
-                            
-                            Spacer()
-                            
-                            // Checkmark Indicator
-                            ZStack {
-                                Circle()
-                                    .strokeBorder(isSelected ? accentColor : currentTheme.borderSubtle, lineWidth: 1.2)
-                                    .frame(width: 14, height: 14)
-                                
-                                if isSelected {
-                                    Circle()
-                                        .fill(accentColor)
-                                        .frame(width: 7, height: 7)
-                                }
-                            }
-                            .frame(width: 16, height: 16)
+                            .padding(.vertical, 7)
+                            .padding(.horizontal, 9)
+                            .background(
+                                RoundedRectangle(cornerRadius: 7)
+                                    .fill(isSelected ? currentTheme.surfaceMuted : Color.clear)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 7)
+                                    .stroke(isSelected ? accentColor.opacity(0.45) : currentTheme.borderSubtle.opacity(0.4), lineWidth: 0.8)
+                            )
                         }
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 8)
-                        .background(
-                            RoundedRectangle(cornerRadius: 7)
-                                .fill(isSelected ? currentTheme.surfaceMuted : Color.clear)
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 7)
-                                .stroke(isSelected ? accentColor.opacity(0.4) : currentTheme.borderSubtle.opacity(0.4), lineWidth: 0.8)
-                        )
+                        .buttonStyle(.plain)
+                        .help("Switch to \(theme.displayName)")
                     }
-                    .buttonStyle(.plain)
-                    .help("Switch to \(theme.displayName) theme")
                 }
             }
+            
+            // Section 2: Accent Colors
+            VStack(alignment: .leading, spacing: 6) {
+                Text("ACCENT COLOR")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundColor(currentTheme.textSecondary.opacity(0.85))
+                    .tracking(0.6)
+                
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 4), spacing: 6) {
+                    ForEach(AccentColorChoice.allCases) { choice in
+                        let isSelected = (currentAccentColor == choice)
+                        
+                        Button(action: {
+                            onSelectAccentColor(choice)
+                        }) {
+                            VStack(spacing: 3) {
+                                ZStack {
+                                    Circle()
+                                        .fill(choice.color)
+                                        .frame(width: 16, height: 16)
+                                    
+                                    if isSelected {
+                                        Circle()
+                                            .strokeBorder(currentTheme.textPrimary, lineWidth: 1.3)
+                                            .frame(width: 22, height: 22)
+                                    }
+                                }
+                                .frame(width: 24, height: 24)
+                                
+                                Text(choice.rawValue)
+                                    .font(.system(size: 8, weight: isSelected ? .semibold : .regular))
+                                    .foregroundColor(isSelected ? currentTheme.textPrimary : currentTheme.textSecondary)
+                                    .lineLimit(1)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 3)
+                            .background(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .fill(isSelected ? currentTheme.surfaceMuted.opacity(0.7) : Color.clear)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .help("Accent: \(choice.rawValue)")
+                    }
+                }
+            }
+            
+            Spacer()
+            
+            // Done Button
+            Button(action: onClose) {
+                HStack {
+                    Spacer()
+                    Text("Done")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(currentTheme == .glassy ? Color.primary : Color.white)
+                    Spacer()
+                }
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 7)
+                        .fill(currentTheme == .glassy ? Color.white.opacity(0.25) : accentColor)
+                )
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 2)
         }
-        .padding(10)
-        .background(
-            RoundedRectangle(cornerRadius: 10)
-                .fill(currentTheme == .glassy ? AnyShapeStyle(Color.white.opacity(0.12)) : AnyShapeStyle(currentTheme.surfaceMuted.opacity(0.85)))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(currentTheme.borderSubtle, lineWidth: 0.8)
-        )
     }
     
     // MARK: - Mini Visual Swatches

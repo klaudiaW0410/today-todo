@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @Published var theme: AppTheme = .white
     @Published var accentColor: AccentColorChoice = .black
     let todoStore = TodoStore()
+    let updateChecker = UpdateChecker()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -37,6 +38,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         
         setupMenuBar()
+        
+        // Check for updates in background
+        updateChecker.checkForUpdates()
         
         // Present popover on launch
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -61,6 +65,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         let hostingController = NSHostingController(
             rootView: MainCardView()
                 .environmentObject(todoStore)
+                .environmentObject(updateChecker)
                 .environmentObject(self)
         )
         // Ensure hosting view background is transparent so Glassy material can render desktop blur

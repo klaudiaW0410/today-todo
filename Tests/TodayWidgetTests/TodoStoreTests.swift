@@ -125,4 +125,17 @@ final class TodoStoreTests: XCTestCase {
         
         UserDefaults.standard.removeObject(forKey: themeKey)
     }
+    
+    func testUpdateCheckerVersionComparison() {
+        let checker = UpdateChecker()
+        
+        XCTAssertTrue(checker.isVersion("1.1.0", newerThan: "1.0.0"))
+        XCTAssertTrue(checker.isVersion("2.0.0", newerThan: "1.9.9"))
+        XCTAssertTrue(checker.isVersion("1.0.1", newerThan: "1.0.0"))
+        XCTAssertTrue(checker.isVersion("1.10.0", newerThan: "1.9.0"))
+        
+        XCTAssertFalse(checker.isVersion("1.0.0", newerThan: "1.0.0"))
+        XCTAssertFalse(checker.isVersion("1.0.0", newerThan: "1.0.1"))
+        XCTAssertFalse(checker.isVersion("0.9.0", newerThan: "1.0.0"))
+    }
 }

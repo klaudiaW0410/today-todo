@@ -3,6 +3,8 @@ import SwiftUI
 // MARK: - Accent Color Palette
 enum AccentColorChoice: String, CaseIterable, Identifiable, Codable {
     case black = "Black"
+    case mocha = "Mocha"
+    case caramel = "Caramel"
     case coolGray = "Cool Gray"
     case powderPink = "Powder Pink"
     case sageGreen = "Sage Green"
@@ -15,6 +17,10 @@ enum AccentColorChoice: String, CaseIterable, Identifiable, Codable {
         switch self {
         case .black:
             return Color(red: 23/255, green: 23/255, blue: 23/255)       // #171717
+        case .mocha:
+            return Color(red: 138/255, green: 90/255, blue: 62/255)      // #8A5A3E Warm Roast
+        case .caramel:
+            return Color(red: 194/255, green: 133/255, blue: 86/255)     // #C28556 Caramel Latte
         case .coolGray:
             return Color(red: 146/255, green: 146/255, blue: 146/255)   // #929292
         case .powderPink:

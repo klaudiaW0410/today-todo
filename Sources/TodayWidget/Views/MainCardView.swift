@@ -5,6 +5,7 @@ import AppKit
 struct MainCardView: View {
     @EnvironmentObject var todoStore: TodoStore
     @EnvironmentObject var appDelegate: AppDelegate
+    @EnvironmentObject var updateChecker: UpdateChecker
     
     @State private var newTodoText: String = ""
     @State private var isThemePickerOpen: Bool = false
@@ -47,16 +48,54 @@ struct MainCardView: View {
         VStack(alignment: .leading, spacing: 0) {
             topBarSection
             
-            // Expandable In-Card Theme Selector
+            // In-App Update Notification Banner
+            if let update = updateChecker.updateAvailable {
+                Button(action: {
+                    updateChecker.openDownloadPage()
+                }) {
+                    HStack(spacing: 5) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 8.5, weight: .bold))
+                            .foregroundColor(appDelegate.accentColor.color)
+                        
+                        Text("New version \(update.version) available")
+                            .font(.system(size: 9.5, weight: .medium))
+                            .foregroundColor(theme.textPrimary)
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 2) {
+                            Text("Update")
+                                .font(.system(size: 9, weight: .bold))
+                            Image(systemName: "arrow.up.right")
+                                .font(.system(size: 6.5, weight: .bold))
+                        }
+                        .foregroundColor(appDelegate.accentColor.color)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4.5)
+                    .background(appDelegate.accentColor.color.opacity(0.12))
+                    .cornerRadius(5)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(appDelegate.accentColor.color.opacity(0.3), lineWidth: 0.5)
+                    )
+                }
+                .buttonStyle(.plain)
+                .padding(.bottom, 8)
+                .transition(.opacity)
+            }
+            
             if isThemePickerOpen {
                 ThemePickerView(
                     currentTheme: theme,
                     accentColor: appDelegate.accentColor.color,
+                    currentAccentColor: appDelegate.accentColor,
                     onSelectTheme: { selectedTheme in
                         appDelegate.setTheme(selectedTheme)
-                        withAnimation(reduceMotion ? .none : .spring(response: 0.25, dampingFraction: 0.8)) {
-                            isThemePickerOpen = false
-                        }
+                    },
+                    onSelectAccentColor: { selectedColor in
+                        appDelegate.setAccentColor(selectedColor)
                     },
                     onClose: {
                         withAnimation(reduceMotion ? .none : .spring(response: 0.25, dampingFraction: 0.8)) {
@@ -68,26 +107,25 @@ struct MainCardView: View {
                     reduceMotion
                         ? .opacity
                         : .asymmetric(
-                            insertion: .opacity.combined(with: .move(edge: .top)),
-                            removal: .opacity.combined(with: .move(edge: .top))
+                            insertion: .opacity.combined(with: .scale(scale: 0.98)),
+                            removal: .opacity.combined(with: .scale(scale: 0.98))
                         )
                 )
-                .padding(.bottom, 12)
+            } else {
+                headerSection
+                progressSection
+                
+                Divider()
+                    .background(theme.borderSubtle)
+                    .padding(.bottom, 8)
+                
+                taskListSection
+                addTaskSection
+                
+                Spacer(minLength: 4)
+                
+                footerSection
             }
-            
-            headerSection
-            progressSection
-            
-            Divider()
-                .background(theme.borderSubtle)
-                .padding(.bottom, 8)
-            
-            taskListSection
-            addTaskSection
-            
-            Spacer(minLength: 4)
-            
-            footerSection
         }
         .padding(16)
         .frame(width: 292, height: 490)
@@ -157,7 +195,7 @@ struct MainCardView: View {
             
             Spacer()
             
-            // Theme Selector Toggle Button
+            // Theme / Appearance Toggle Button
             Button(action: {
                 withAnimation(reduceMotion ? .none : .spring(response: 0.28, dampingFraction: 0.8)) {
                     isThemePickerOpen.toggle()
@@ -165,11 +203,11 @@ struct MainCardView: View {
             }) {
                 HStack(spacing: 3) {
                     Image(systemName: isThemePickerOpen ? "paintpalette.fill" : "paintpalette")
-                        .font(.system(size: 10, weight: .semibold))
+                        .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(isThemePickerOpen ? appDelegate.accentColor.color : theme.textSecondary)
                 }
-                .padding(.horizontal, 6)
-                .padding(.vertical, 3.5)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 4)
                 .background(isThemePickerOpen ? appDelegate.accentColor.color.opacity(0.12) : theme.surfaceMuted)
                 .cornerRadius(5)
                 .overlay(
@@ -178,41 +216,14 @@ struct MainCardView: View {
                 )
             }
             .buttonStyle(.plain)
-            .help("Theme: \(theme.displayName)")
-            
-            // Accent Color Swatches (Refined compact footprint)
-            HStack(spacing: 4) {
-                ForEach(AccentColorChoice.allCases) { choice in
-                    let isSelected = (appDelegate.accentColor == choice)
-                    
-                    Button(action: {
-                        appDelegate.setAccentColor(choice)
-                    }) {
-                        ZStack {
-                            Circle()
-                                .fill(choice.color)
-                                .frame(width: 9.5, height: 9.5)
-                            
-                            if isSelected {
-                                Circle()
-                                    .strokeBorder(theme.textPrimary, lineWidth: 1.1)
-                                    .frame(width: 14.5, height: 14.5)
-                            }
-                        }
-                        .frame(width: 15, height: 15)
-                        .contentShape(Circle())
-                    }
-                    .buttonStyle(.plain)
-                    .help("Accent: \(choice.rawValue)")
-                }
-            }
+            .help("Customize Appearance")
             
             // Quit Button
             Button(action: {
                 NSApplication.shared.terminate(nil)
             }) {
                 Image(systemName: "power")
-                    .font(.system(size: 9.5, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
                     .foregroundColor(theme.textSecondary.opacity(0.8))
                     .padding(4)
                     .contentShape(Rectangle())
@@ -330,8 +341,7 @@ struct MainCardView: View {
                 }
             }
         }
-        .frame(maxHeight: isThemePickerOpen ? 120 : 210)
-        .animation(.spring(response: 0.28, dampingFraction: 0.8), value: isThemePickerOpen)
+        .frame(maxHeight: 215)
     }
     
     // MARK: - 5. Add Task Input Section
