@@ -46,6 +46,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     
     func setupMenuBar() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem.autosaveName = "TodayStatusItem"
         if let button = statusItem.button {
             button.image = NSImage(systemSymbolName: "checklist", accessibilityDescription: "Today Widget")
             button.action = #selector(statusItemClicked(_:))
