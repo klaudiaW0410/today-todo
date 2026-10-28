@@ -6,10 +6,14 @@ A native, lightweight macOS menu bar companion built with **SwiftUI** & **AppKit
 
 ## ✨ Features
 - 📋 **Menu Bar Native**: Unobtrusive icon in the macOS menu bar — click anytime to view or toggle your checklist.
-- 🎨 **Palette Accents**: 6 curated stationery accent colors (*Black*, *Cool Gray*, *Powder Pink*, *Sage Green*, *Olive Green*, *Burgundy*).
-- 🗓️ **Calendar & Year Stats**: Displays the current month, time, ISO week number, and a live countdown of remaining days in the year.
-- ✍️ **Cozy Checklist**: Smooth strikethrough animations, progress bar with completion percentage, and intuitive task management.
-- 💾 **Automatic Persistence**: Tasks and your chosen accent color are saved automatically to `UserDefaults`.
+- 🎭 **3 Selectable Themes**: Switch effortlessly between:
+  - **White**: Clean, crisp, bright minimal Apple aesthetic.
+  - **Cozy**: Warm ivory stationery paper tone with calming charcoal typography.
+  - **Glassy**: Genuine translucent frosted-glass material with wallpaper blur and depth.
+- 🎨 **Independent Accent Colors**: 6 curated stationery colors (*Black*, *Cool Gray*, *Powder Pink*, *Sage Green*, *Olive Green*, *Burgundy*).
+- 🗓️ **Calendar & Year Stats**: Displays current month, time, ISO week number, and live countdown of remaining days in the year.
+- ✍️ **Cozy Checklist**: Spring animations, progress bar with completion percentage, and intuitive task management.
+- 💾 **Automatic Persistence**: Tasks, selected theme, and accent color are saved automatically to `UserDefaults`.
 - ⚡ **Ultra Lightweight**: Pure native Swift app (<15 MB RAM, 0% CPU idle).
 - ⏻ **One-Click Quit**: Convenient power button in the widget header to exit whenever needed.
 

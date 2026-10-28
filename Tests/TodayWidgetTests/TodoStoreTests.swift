@@ -90,4 +90,39 @@ final class TodoStoreTests: XCTestCase {
             _ = choice.color // Ensure color accessor does not crash
         }
     }
+    
+    func testAppThemeChoicesAndTokens() {
+        XCTAssertEqual(AppTheme.allCases.count, 3)
+        
+        for theme in AppTheme.allCases {
+            XCTAssertFalse(theme.rawValue.isEmpty)
+            XCTAssertEqual(theme.id, theme.rawValue)
+            XCTAssertFalse(theme.subtitle.isEmpty)
+            XCTAssertFalse(theme.iconName.isEmpty)
+            
+            // Verify color accessors do not crash
+            _ = theme.textPrimary
+            _ = theme.textSecondary
+            _ = theme.surfaceMuted
+            _ = theme.borderSubtle
+            _ = theme.cardBorder
+            _ = theme.cardBackground
+            _ = theme.rowHover
+            _ = theme.checkboxBorder
+            _ = theme.shadowColor
+        }
+    }
+    
+    func testThemePersistenceKey() {
+        let themeKey = "widget_theme"
+        UserDefaults.standard.set(AppTheme.glassy.rawValue, forKey: themeKey)
+        
+        let loadedRaw = UserDefaults.standard.string(forKey: themeKey)
+        XCTAssertEqual(loadedRaw, "Glassy")
+        
+        let parsed = AppTheme(rawValue: loadedRaw ?? "")
+        XCTAssertEqual(parsed, .glassy)
+        
+        UserDefaults.standard.removeObject(forKey: themeKey)
+    }
 }

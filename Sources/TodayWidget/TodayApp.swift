@@ -17,13 +17,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     var menuBarPopover: NSPopover!
     var statusItem: NSStatusItem!
     
+    @Published var theme: AppTheme = .white
     @Published var accentColor: AccentColorChoice = .black
     let todoStore = TodoStore()
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         
-        // Load persisted accent color
+        // Restore persisted theme
+        if let savedTheme = UserDefaults.standard.string(forKey: "widget_theme"),
+           let parsedTheme = AppTheme(rawValue: savedTheme) {
+            self.theme = parsedTheme
+        }
+        
+        // Restore persisted accent color
         if let savedColor = UserDefaults.standard.string(forKey: "widget_accent_color"),
            let parsedColor = AccentColorChoice(rawValue: savedColor) {
             self.accentColor = parsedColor
@@ -46,14 +53,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         }
         
         menuBarPopover = NSPopover()
-        menuBarPopover.contentSize = NSSize(width: 292, height: 480)
+        menuBarPopover.contentSize = NSSize(width: 292, height: 490)
         menuBarPopover.behavior = .transient
         menuBarPopover.animates = true
-        menuBarPopover.contentViewController = NSHostingController(
+        
+        let hostingController = NSHostingController(
             rootView: MainCardView()
                 .environmentObject(todoStore)
                 .environmentObject(self)
         )
+        // Ensure hosting view background is transparent so Glassy material can render desktop blur
+        hostingController.view.wantsLayer = true
+        hostingController.view.layer?.backgroundColor = NSColor.clear.cgColor
+        
+        menuBarPopover.contentViewController = hostingController
     }
     
     @objc func statusItemClicked(_ sender: Any?) {
@@ -75,8 +88,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         menuBarPopover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
     }
     
+    func setTheme(_ newTheme: AppTheme) {
+        withAnimation(.easeInOut(duration: 0.2)) {
+            self.theme = newTheme
+        }
+        UserDefaults.standard.set(newTheme.rawValue, forKey: "widget_theme")
+    }
+    
     func setAccentColor(_ newColor: AccentColorChoice) {
-        self.accentColor = newColor
+        withAnimation(.easeInOut(duration: 0.15)) {
+            self.accentColor = newColor
+        }
         UserDefaults.standard.set(newColor.rawValue, forKey: "widget_accent_color")
     }
 }
