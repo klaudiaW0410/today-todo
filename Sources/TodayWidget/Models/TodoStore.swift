@@ -20,10 +20,9 @@ class TodoStore: ObservableObject {
             self.todos = decoded
         } else {
             self.todos = [
-                TodoItem(text: "Review project roadmap", isCompleted: false),
-                TodoItem(text: "Update typography & design tokens", isCompleted: true),
-                TodoItem(text: "Finalize checklist interactions", isCompleted: false),
-                TodoItem(text: "Prepare GitHub release assets", isCompleted: false)
+                TodoItem(text: "Welcome to Today! 👋", isCompleted: false),
+                TodoItem(text: "Click the checkbox to complete a task", isCompleted: true),
+                TodoItem(text: "Press Return to add your own tasks", isCompleted: false)
             ]
         }
     }

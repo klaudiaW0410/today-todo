@@ -193,22 +193,39 @@ struct MainCardView: View {
     
     private var taskListSection: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 0) {
-                ForEach(todoStore.todos) { todo in
-                    TaskRowView(
-                        todo: todo,
-                        accentColor: appDelegate.accentColor.color,
-                        onToggle: {
-                            withAnimation(.easeInOut(duration: 0.15)) {
-                                todoStore.toggle(id: todo.id)
+            if todoStore.todos.isEmpty {
+                VStack(spacing: 6) {
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 15))
+                        .foregroundColor(appDelegate.accentColor.color.opacity(0.8))
+                        .padding(.top, 40)
+                    Text("All clear for today")
+                        .font(.system(size: 12.5, weight: .medium))
+                        .foregroundColor(textSecondary)
+                    Text("Add a task below to get started")
+                        .font(.system(size: 10))
+                        .foregroundColor(textSecondary.opacity(0.7))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 180)
+            } else {
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach(todoStore.todos) { todo in
+                        TaskRowView(
+                            todo: todo,
+                            accentColor: appDelegate.accentColor.color,
+                            onToggle: {
+                                withAnimation(.easeInOut(duration: 0.15)) {
+                                    todoStore.toggle(id: todo.id)
+                                }
+                            },
+                            onDelete: {
+                                withAnimation(.easeOut(duration: 0.15)) {
+                                    todoStore.delete(id: todo.id)
+                                }
                             }
-                        },
-                        onDelete: {
-                            withAnimation(.easeOut(duration: 0.15)) {
-                                todoStore.delete(id: todo.id)
-                            }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
