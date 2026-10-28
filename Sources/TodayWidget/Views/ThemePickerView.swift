@@ -105,7 +105,7 @@ struct ThemePickerView: View {
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(currentTheme == .glassy ? AnyShapeStyle(.regularMaterial) : AnyShapeStyle(currentTheme.surfaceMuted.opacity(0.8)))
+                .fill(currentTheme == .glassy ? AnyShapeStyle(Color.white.opacity(0.12)) : AnyShapeStyle(currentTheme.surfaceMuted.opacity(0.85)))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10)

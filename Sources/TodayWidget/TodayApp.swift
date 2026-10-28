@@ -86,6 +86,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         guard let button = statusItem.button else { return }
         NSApp.activate(ignoringOtherApps: true)
         menuBarPopover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        
+        // Ensure popover window does not render opaque backing
+        if let window = menuBarPopover.contentViewController?.view.window {
+            window.isOpaque = false
+            window.backgroundColor = .clear
+        }
     }
     
     func setTheme(_ newTheme: AppTheme) {

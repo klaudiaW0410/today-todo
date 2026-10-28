@@ -119,10 +119,9 @@ struct MainCardView: View {
             )
         case .glassy:
             ZStack {
-                Rectangle()
-                    .fill(.regularMaterial)
+                VisualEffectView(material: .popover, blendingMode: .behindWindow, state: .active)
                 LinearGradient(
-                    colors: [Color.white.opacity(0.12), Color.white.opacity(0.02)],
+                    colors: [Color.white.opacity(0.15), Color.white.opacity(0.03)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )

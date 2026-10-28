@@ -72,7 +72,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         case .cozy:
             return Color(red: 239/255, green: 233/255, blue: 220/255)   // #EFE9DC Warm pill
         case .glassy:
-            return Color.primary.opacity(0.07)                            // Adaptive tint
+            return Color.white.opacity(0.14)                              // Translucent glass highlight
         }
     }
     
@@ -83,7 +83,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         case .cozy:
             return Color(red: 228/255, green: 221/255, blue: 208/255)   // #E4DDD0 Warm separator
         case .glassy:
-            return Color.white.opacity(0.18)                              // Translucent rim
+            return Color.white.opacity(0.20)                              // Translucent fine highlight line
         }
     }
     
@@ -94,7 +94,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         case .cozy:
             return Color(red: 220/255, green: 212/255, blue: 198/255)
         case .glassy:
-            return Color.white.opacity(0.25)
+            return Color.white.opacity(0.35)                              // Polished glass border edge
         }
     }
     
@@ -105,7 +105,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         case .cozy:
             return Color(red: 247/255, green: 242/255, blue: 232/255)   // #F7F2E8 Ivory
         case .glassy:
-            return Color.clear                                            // Material shows through
+            return Color.clear                                            // VisualEffectView shows through
         }
     }
     
@@ -116,7 +116,7 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
         case .cozy:
             return Color(red: 235/255, green: 228/255, blue: 216/255).opacity(0.6)
         case .glassy:
-            return Color.primary.opacity(0.06)
+            return Color.white.opacity(0.12)
         }
     }
     
