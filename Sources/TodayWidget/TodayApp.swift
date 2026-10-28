@@ -91,6 +91,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         if let window = menuBarPopover.contentViewController?.view.window {
             window.isOpaque = false
             window.backgroundColor = .clear
+            window.contentView?.wantsLayer = true
+            window.contentView?.layer?.backgroundColor = NSColor.clear.cgColor
         }
     }
     
