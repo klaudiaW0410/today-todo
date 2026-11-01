@@ -1,82 +1,69 @@
-# Today. — Minimalist Menu Bar To-Do Widget for macOS ✉️
+# Today
 
-A native, lightweight macOS menu bar companion built with **SwiftUI** & **AppKit**, designed as an aesthetic, stationery-inspired to-do list right in your status bar.
+A small, quiet menu bar to-do list for macOS.
 
----
-
-## ✨ Features
-- 📋 **Menu Bar Native**: Unobtrusive icon in the macOS menu bar — click anytime to view or toggle your checklist.
-- 🎭 **3 Selectable Themes**: Switch effortlessly between:
-  - **White**: Clean, crisp, bright minimal Apple aesthetic.
-  - **Cozy**: Warm ivory stationery paper tone with calming charcoal typography.
-  - **Glassy**: Genuine translucent frosted-glass material with wallpaper blur and depth.
-- 🎨 **Independent Accent Colors**: 6 curated stationery colors (*Black*, *Cool Gray*, *Powder Pink*, *Sage Green*, *Olive Green*, *Burgundy*).
-- 🗓️ **Calendar & Year Stats**: Displays current month, time, ISO week number, and live countdown of remaining days in the year.
-- ✍️ **Cozy Checklist**: Spring animations, progress bar with completion percentage, and intuitive task management.
-- 💾 **Automatic Persistence**: Tasks, selected theme, and accent color are saved automatically to `UserDefaults`.
-- ⚡ **Ultra Lightweight**: Pure native Swift app (<15 MB RAM, 0% CPU idle).
-- ⏻ **One-Click Quit**: Convenient power button in the widget header to exit whenever needed.
+I built this because I wanted a simple place to keep track of a few daily tasks without having another heavy app open in the Dock. It lives in your status bar, opens with a single click, and stays out of the way when you are focusing on work.
 
 ---
 
-## 💻 Requirements
-- **macOS 13.0 (Ventura)** or later
-- Apple Silicon (M1/M2/M3/M4) or Intel Mac
+## Features
+
+- **Menu bar native**: Runs quietly in the status bar without cluttering your Dock.
+- **Three visual themes**:
+  - **White**: Clean, bright, and minimal.
+  - **Cozy**: Warm ivory paper tone with soft text.
+  - **Glassy**: Translucent frosted glass that blends into your desktop wallpaper.
+- **Curated accent colors**: Black, Mocha, Caramel, Sage Green, Powder Pink, Olive, Burgundy, and Cool Gray.
+- **Appearance screen**: Dedicated customization panel to switch themes and accents easily.
+- **Day and year context**: Displays the current date, week number, and remaining days in the year.
+- **Progress tracking**: See your completion percentage as you check off items.
+- **Saved automatically**: Tasks, selected theme, and chosen colors persist across reboots.
+- **Lightweight**: Built purely with native SwiftUI and AppKit (<15 MB RAM, 0% CPU idle).
 
 ---
 
-## 🚀 How to Run & Install
+## Installation
 
-### Option 1: Run Pre-Packaged App
-1. Download or clone this repository.
-2. Launch the app directly:
-   ```bash
-   open Today.app
-   ```
+### Download pre-built app
+1. Download `Today.zip` from this repository or the Releases section.
+2. Unzip and drag `Today.app` into your `/Applications` folder.
+3. Launch `Today.app`.
 
-> [!NOTE]
-> **First-time launch on macOS (Gatekeeper)**:
-> Since this open-source app is not notarized with an Apple Developer ID certificate, macOS might show a warning. To allow it, run:
-> ```bash
-> xattr -cr Today.app
-> ```
-> Or **Right-click** on `Today.app` in Finder and select **Open**.
+> **Note for first launch:**  
+> Since this app is distributed as an open-source build without a paid Apple Developer certificate, macOS Gatekeeper may show a warning. To open it:
+> - Right-click `Today.app` in Finder and select **Open**, or
+> - Run this command in Terminal:
+>   ```bash
+>   xattr -cr /Applications/Today.app
+>   ```
 
 ---
 
-### Option 2: Build & Develop from Source
+## Building from source
 
-**Open in Xcode:**
-```bash
-xed .
-```
+Requirements:
+- macOS 13.0 (Ventura) or later
+- Swift 5.9+ / Xcode command-line tools
 
-**Run from Terminal:**
+Clone the repository and run directly:
 ```bash
 swift run
 ```
 
-**Run Unit Tests:**
+Run unit tests:
 ```bash
 swift test
 ```
 
-**Rebuild `Today.app` for Production:**
+Build a production release binary:
 ```bash
 swift build -c release
-cp .build/release/TodayWidget Today.app/Contents/MacOS/Today
+cp .build/out/Products/Release/TodayWidget Today.app/Contents/MacOS/Today
+codesign --force --deep -s - Today.app
 ```
 
 ---
 
-## 🧪 Testing
+## License
 
-The project includes unit test coverage for store actions, task model persistence, validation, and accent choices. Run tests with:
-```bash
-swift test
-```
-
----
-
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+MIT License. See [LICENSE](LICENSE) for details.
